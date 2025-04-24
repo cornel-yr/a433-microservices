@@ -1,0 +1,33 @@
+# Menggunakan Docker Compose versi 3
+# version: '3.9'
+
+# Mendefinisikan services yang akan dijalankan
+services:
+  # Service untuk aplikasi web (item-app)
+  item-app:
+    # Menggunakan image item-app dari GitHub Packages
+    # image: item-app:v1
+    image: ghcr.io/cornel-yr/item-app:v1
+    # Melakukan port mapping agar dapat diakses dari port 80 di host
+    ports:
+      - "80:8080"
+    # Menerapkan restart policy agar container selalu restart ketika terhenti
+    restart: always
+    # Pastikan item-app hanya berjalan setelah item-db diluncurkan
+    depends_on:
+      - item-db
+  
+  # Service untuk database MongoDB (item-db)
+  item-db:
+    # Menggunakan image mongo:3 dari Docker Hub
+    image: mongo:3
+    # Menerapkan restart policy agar container selalu restart ketika terhenti
+    restart: always
+    # Memakai volume bernama app-db dengan target /data/db di container
+    volumes:
+      - app-db:/data/db
+
+# Mendefinisikan volume yang akan digunakan
+volumes:
+  # Volume untuk menyimpan data MongoDB
+  app-db:
