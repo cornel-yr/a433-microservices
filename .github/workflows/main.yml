@@ -43,8 +43,8 @@ jobs:
     needs: test-app
     runs-on: ubuntu-latest
     permissions:
-      contents: read/write
-      packages: read/write  
+      contents: read
+      packages: write  
     steps:
     - uses: actions/checkout@v3
     
