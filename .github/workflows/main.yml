@@ -1,0 +1,46 @@
+name: Frontend CI
+
+on:
+  push:
+    branches: [ karsajobs-ui ]
+  pull_request:
+    branches: [ karsajobs-ui ]
+
+jobs:
+  lint-dockerfile:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Install hadolint
+      run: |
+        # Download hadolint dan berikan izin eksekusi
+        sudo wget -O /bin/hadolint https://github.com/hadolint/hadolint/releases/download/v2.12.0/hadolint-Linux-x86_64
+        sudo chmod +x /bin/hadolint
+    
+    - name: Run hadolint
+      run: |
+        # Jalankan hadolint untuk memeriksa Dockerfile
+        hadolint Dockerfile
+
+  build-app-karsajobs-ui:
+    needs: lint-dockerfile
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Login to GitHub Container Registry
+      uses: docker/login-action@v2
+      with:
+        registry: ghcr.io
+        username: ${{ github.repository_owner }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    
+    - name: Build and push Docker image
+      run: |
+        # Berikan izin eksekusi pada script build dan push
+        chmod +x build_push_image_karsajobs_ui.sh
+        # Jalankan script build dan push
+        ./build_push_image_karsajobs_ui.sh
+      env:
+        GITHUB_TOKEN: ${{ secrets.CONTAINER_REGISTRY_PAT }}
