@@ -62,4 +62,4 @@ jobs:
         # Jalankan script build dan push
         ./build_push_image_karsajobs.sh
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.CONTAINER_REGISTRY_PAT }}
